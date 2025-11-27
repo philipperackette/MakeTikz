@@ -23,24 +23,22 @@
   \begin{axis}[%
     xmin=-5.0,
     xmax=5.0,
-    ymin=-2.0,
-    ymax=3.0,
+    ymin=-5.0,
+    ymax=5.0,
     axis lines=middle,
     trig format=rad,
     grid=major,
-    xtick distance=1.0,
-    ytick distance=1.0,
+    xtick={ -4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0 },
+    ytick={ -4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0 },
     xlabel=$x$,
     ylabel=$y$,
     scale only axis,
     x=1.0cm,
     y=1.0cm
   ]
-    \addplot[samples=2000, unbounded coords=jump, line width=1.5pt, color=blue, solid, restrict y to domain=-100.0:100.0, domain=-5.0:5.0]{-1 + x^(-2)};
-    \draw[color=blue] (axis cs:-3.645161290322581,-1.1533466533466534) node[anchor=west]{\color{blue}$C_f$};
-    \addplot[samples=2000, unbounded coords=jump, line width=0.5pt, color=green, solid, restrict y to domain=-100.0:100.0, domain=-5.0:5.0]{sin(exp(x))};
-    \draw[color=green] (axis cs:-3.722580645161291,0.23811902383330974) node[anchor=east]{\color{green}$C_g$};
+    \addplot[samples=200, unbounded coords=jump, line width=3.0pt, color=blue, solid, restrict y to domain=-100.0:100.0, domain=-5.0:5.0]{cosh(x)};
+    \addplot[samples=200, unbounded coords=jump, line width=1.5pt, color=red, dash pattern=on 5pt off 5pt, restrict y to domain=-100.0:100.0, domain=-5.0:5.0]{ln(x^2)*sin(x)};
+    \draw[color=red] (axis cs:-3.5677419354838715,-0.5237619523333805) node[anchor=east]{\color{red}$g$};
   \end{axis}
 \end{tikzpicture}
-
 \end{document}  
