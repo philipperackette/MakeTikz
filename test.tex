@@ -25,7 +25,9 @@
     y=1.0cm
   ]
     \addplot[samples=2000, unbounded coords=jump, line width=1.5pt, color=blue, solid, restrict y to domain=-100.0:100.0, domain=-5.0:5.0]{-1 + x^(-2)};
+    \draw[color=blue] (axis cs:0.9483870967741934,2.3431568431568435) node[anchor=west]{\color{blue}$C_f$};
     \addplot[samples=2000, unbounded coords=jump, line width=0.5pt, color=green, solid, restrict y to domain=-100.0:100.0, domain=-5.0:5.0]{sin(exp(x))};
+    \draw[color=green] (axis cs:-3.3354838709677423,0.19352076494933623) node[anchor=east]{\color{green}$C_g$};
   \end{axis}
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
