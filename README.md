@@ -45,4 +45,5 @@ L’objectif : préparer rapidement de beaux tracés pour des cours, feuilles d�
 Installation typique :
 
 ```bash
+git clone https://github.com/philipperackette/MakeTikz.git
 pip install numpy sympy matplotlib
