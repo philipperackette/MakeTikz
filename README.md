@@ -47,3 +47,4 @@ Installation typique :
 ```bash
 git clone https://github.com/philipperackette/MakeTikz.git
 pip install numpy sympy matplotlib
+python plot_tikz_generator.py
