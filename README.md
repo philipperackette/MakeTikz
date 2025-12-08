@@ -1,5 +1,9 @@
 # MakeTikz
 
+> **Vous ne voulez pas installer Python ou vous ne savez pas l’utiliser ?**  
+> Utilisez directement la **version web** (interface très proche, prévisualisation + bouton « Copier le code TikZ ») :  
+> 👉 https://huggingface.co/spaces/rackette/MakeTikz
+
 MakeTikz est un petit utilitaire Python/Tkinter qui permet de **générer automatiquement du code TikZ/pgfplots** à partir d’expressions symboliques (SymPy), avec **aperçu interactif** de la courbe avant export.  
 L’objectif : préparer rapidement de beaux tracés pour des cours, feuilles d’exercices ou rapports LaTeX, sans écrire à la main les commandes `\addplot`.
 
@@ -42,9 +46,10 @@ L’objectif : préparer rapidement de beaux tracés pour des cours, feuilles d�
 - `sympy`  
 - `matplotlib`
 
-Installation typique :
+Installation typique (version bureau) :
 
 ```bash
 git clone https://github.com/philipperackette/MakeTikz.git
+cd MakeTikz
 pip install numpy sympy matplotlib
 python plot_tikz_generator.py
