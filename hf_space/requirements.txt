@@ -1,0 +1,4 @@
+gradio
+sympy
+numpy
+matplotlib
