@@ -1,11 +1,20 @@
 # MakeTikz
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 > **Vous ne voulez pas installer Python ou vous ne savez pas l'utiliser ?**  
 > Utilisez directement la **version web** (interface très proche, prévisualisation + bouton « Copier le code TikZ ») :  
 > 👉 https://huggingface.co/spaces/rackette/MakeTikz
 
 MakeTikz est un ensemble d'utilitaires Python/Tkinter permettant de **générer automatiquement du code TikZ/pgfplots** pour différents types de tracés mathématiques, avec **aperçu interactif** avant export.  
 L’objectif : préparer rapidement de beaux tracés pour des cours, feuilles d’exercices ou rapports LaTeX, sans écrire à la main les commandes `\addplot`.
+
+
+## Aperçu
+
+| Tracés symboliques (`plot_tikz_generator.py`) | Interpolation par points (`Lissage.py`) |
+|:---:|:---:|
+| ![Interface 1](Interface1.png) | ![Interface 2](Interface2.png) |
 
 ---
 
@@ -176,3 +185,9 @@ Les pentes sont alors **estimées automatiquement** par différences finies (cen
 
 Vous pouvez également utiliser des séparateurs `,` ou `;` : ils seront interprétés comme des espaces.
 
+
+---
+
+## Licence
+
+Ce projet est distribué sous licence [MIT](LICENSE).

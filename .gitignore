@@ -1,7 +1,7 @@
 # macOS
 .DS_Store
 
-# Python (optionnel mais utile)
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
@@ -9,3 +9,21 @@ __pycache__/
 *.egg-info/
 .env
 .venv/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# LaTeX output (generated, not source)
+test.pdf
+test.tex
