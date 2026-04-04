@@ -6,6 +6,8 @@
 
 Générateur interactif de code **TikZ/pgfplots** pour produire rapidement des figures mathématiques propres, avec une seconde application dédiée à l'**interpolation par points**.
 
+**Version web :** https://huggingface.co/spaces/rackette/MakeTikz
+
 ### Aperçu
 
 | Tracés symboliques (`plot_tikz_generator.py`) | Interpolation par points (`Lissage.py`) |
@@ -46,6 +48,8 @@ python Lissage.py
 ## English
 
 Interactive **TikZ/pgfplots** code generator for quickly producing clean mathematical figures, with a second application dedicated to **point interpolation**.
+
+**Web version:** https://huggingface.co/spaces/rackette/MakeTikz
 
 ### Overview
 
