@@ -1,9 +1,7 @@
 import gradio as gr
-import sympy as sp
-import numpy as np
 import matplotlib.pyplot as plt
 
-from make_tikz_engine import generate_tikz_code
+from make_tikz_engine import check_pgf, generate_tikz_code, parse_function, sample_function
 
 
 # Small helpers to parse numeric fields safely
@@ -105,6 +103,8 @@ def make_tikz(
             num_samples=num_samples_i,
             label_positions={},  # web version: no drag & drop
         )
+    except ValueError as e:
+        tikz = f"% Erreur / Error: {e}"
     except Exception as e:
         tikz = f"% Error while generating TikZ: {e}"
 
@@ -113,30 +113,6 @@ def make_tikz(
     # -----------------------------
     fig, ax = plt.subplots(figsize=(5, 4))
 
-    x_sym = sp.Symbol("x", real=True)
-    local_dict = {
-        "x": x_sym,
-        "sin": sp.sin,
-        "cos": sp.cos,
-        "tan": sp.tan,
-        "csc": sp.csc,
-        "sec": sp.sec,
-        "cot": sp.cot,
-        "sinh": sp.sinh,
-        "cosh": sp.cosh,
-        "tanh": sp.tanh,
-        "asinh": sp.asinh,
-        "acosh": sp.acosh,
-        "atanh": sp.atanh,
-        "exp": sp.exp,
-        "log": sp.log,
-        "pi": sp.pi,
-        "e": sp.E,
-        "sqrt": sp.sqrt,
-        "abs": sp.Abs,
-        "sign": sp.sign,
-    }
-
     style_mpl_map = {
         "solid": "solid",
         "dashed": "dashed",
@@ -144,43 +120,32 @@ def make_tikz(
         "dashdot": "dashdot",
     }
 
-    xvals = np.linspace(xmin_f, xmax_f, max(num_samples_i, 200))
     curves_plotted = False
+    errors = []
 
     for i in range(len(functions)):
-        fstr = functions[i]
         lab = labels[i]
-        stp = styles[i]
-        col = colors[i]
-        lw = widths[i]
         try:
-            expr = sp.parse_expr(fstr, local_dict)
-            f = sp.lambdify(x_sym, expr, "numpy")
-            yvals = np.array(f(xvals), dtype=float)
-
-            linestyle = style_mpl_map.get(stp, "solid")
-            color = col if col else "black"
-
-            ax.plot(
-                xvals,
-                yvals,
-                linestyle=linestyle,
-                color=color,
-                linewidth=lw,
-                label=lab,
-            )
-            curves_plotted = True
+            # Même lecture que pour le code TikZ (^, 2x, abs, ln...)
+            expr = parse_function(functions[i])
+            check_pgf(expr)
+            xvals, yvals = sample_function(expr, xmin_f, xmax_f, max(num_samples_i, 400), max_abs_y_f)
         except Exception as e:
-            # Show error message inside the plot for this curve
-            ax.text(
-                0.5,
-                0.5,
-                f"Error in {lab}:\n{str(e)}",
-                transform=ax.transAxes,
-                ha="center",
-                color="red",
-            )
+            errors.append(f"{lab}: {e}")
             continue
+        ax.plot(
+            xvals,
+            yvals,
+            linestyle=style_mpl_map.get(styles[i], "solid"),
+            color=colors[i] or "black",
+            linewidth=widths[i],
+            label=lab,
+        )
+        curves_plotted = True
+
+    if errors:
+        ax.text(0.5, 0.5, "\n".join(errors), transform=ax.transAxes,
+                ha="center", va="center", color="red", wrap=True)
 
     ax.set_xlim(xmin_f, xmax_f)
     ax.set_ylim(ymin_f, ymax_f)
@@ -224,7 +189,7 @@ with gr.Blocks() as demo:
             """
         ### Basic operators
         - **Addition / subtraction**: `+`, `-`
-        - **Multiplication**: `*` or implicit
+        - **Multiplication**: `*` or implicit (`2x`, `3sin(x)`)
         - **Division**: `/`
         - **Power**: `**` or `^`
         - **Square root**: `sqrt(x)`
@@ -232,13 +197,14 @@ with gr.Blocks() as demo:
         ### Available functions
         - **Trigonometric**: `sin(x)`, `cos(x)`, `tan(x)`
         - **Hyperbolic**: `sinh(x)`, `cosh(x)`, `tanh(x)`
-        - **Exponential / logarithm**: `exp(x)`, `log(x)` (natural log), `log10(x)`
+        - **Inverse**: `asin(x)`, `acos(x)`, `atan(x)`, `asinh(x)`, `acosh(x)`, `atanh(x)`
+        - **Exponential / logarithm**: `exp(x)`, `log(x)` or `ln(x)` (natural log), `log10(x)`, `log2(x)`
         - **Absolute value**: `abs(x)` or `Abs(x)`
         - **Sign**: `sign(x)`
 
         ### Constants
         - **π (pi)**: `pi`
-        - **e (Euler)**: `E` or `exp(1)`
+        - **e (Euler)**: `e`, `E` or `exp(1)`
 
         ### Example functions
         1. **Polynomial**: `x**2 + 3*x - 2`
@@ -252,8 +218,9 @@ with gr.Blocks() as demo:
            (for x < 0: x+1, otherwise: x-1)
 
         ### Tips
-        - Use `*` explicitly for multiplication
+        - `x^2` and `x**2` are equivalent; `2x` means `2*x`
         - Parentheses matter for precedence
+        - Functions that pgfplots cannot draw (e.g. `gamma`) are reported in the code box
         - For piecewise functions, use `Piecewise((expr1, cond1), (expr2, cond2), ...)`
         """
         )
