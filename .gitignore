@@ -27,3 +27,6 @@ __pycache__/
 # LaTeX output (generated, not source)
 test.pdf
 test.tex
+
+# Tests
+.pytest_cache/
