@@ -1,6 +1,6 @@
-# MakeTikz
+[![CI](https://github.com/philipperackette/MakeTikz/actions/workflows/ci.yml/badge.svg)](https://github.com/philipperackette/MakeTikz/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+# MakeTikz
 
 ## Français
 
@@ -19,7 +19,7 @@ Générateur interactif de code **TikZ/pgfplots** pour produire rapidement des f
 - `plot_tikz_generator.py` : générateur interactif de code TikZ/pgfplots (version bureau)
 - `Lissage.py` : outil d'interpolation par points
 - `hf_space/` : version web (Gradio) et moteur commun `make_tikz_engine.py`, utilisé aussi par la version bureau
-- `tests/` : tests du moteur
+- `tests/` : tests du moteur, de `Lissage.py` et des interfaces
 - `Interface1.png`, `Interface2.png` : captures d'écran
 - `LICENSE` : licence MIT
 
@@ -49,11 +49,12 @@ python Lissage.py
 ### Tests
 
 ```bash
-pip install sympy numpy pytest
+pip install -r requirements-dev.txt
+ruff check .
 python -m pytest tests
 ```
 
-Si `pdflatex` est installé, les tests compilent aussi le code produit avec pgfplots.
+Les tests couvrent le moteur, les calculs de `Lissage.py` et le chargement des interfaces (Tkinter et Gradio). Si `pdflatex` est installé, ils compilent aussi le code produit avec pgfplots. GitHub Actions les lance à chaque push et pull request, sous Python 3.10 (version des Spaces Hugging Face) et 3.13, avec pdflatex.
 
 ### Public visé
 
@@ -80,7 +81,7 @@ Interactive **TikZ/pgfplots** code generator for quickly producing clean mathema
 - `plot_tikz_generator.py`: interactive TikZ/pgfplots code generator (desktop version)
 - `Lissage.py`: point interpolation tool
 - `hf_space/`: web version (Gradio) and the shared engine `make_tikz_engine.py`, also used by the desktop version
-- `tests/`: engine tests
+- `tests/`: tests for the engine, `Lissage.py` and the interfaces
 - `Interface1.png`, `Interface2.png`: screenshots
 - `LICENSE`: MIT license
 
@@ -110,11 +111,12 @@ python Lissage.py
 ### Tests
 
 ```bash
-pip install sympy numpy pytest
+pip install -r requirements-dev.txt
+ruff check .
 python -m pytest tests
 ```
 
-When `pdflatex` is installed, the tests also compile the generated code with pgfplots.
+The tests cover the engine, the `Lissage.py` computations and loading of both interfaces (Tkinter and Gradio). When `pdflatex` is installed, they also compile the generated code with pgfplots. GitHub Actions runs them on every push and pull request, with Python 3.10 (the Hugging Face Spaces version) and 3.13, with pdflatex.
 
 ### Intended audience
 

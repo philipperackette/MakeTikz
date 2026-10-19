@@ -289,7 +289,7 @@ def generate_tikz_code_from_samples(
         )
 
         coord_lines = []
-        for xv, yv in zip(xvals, yvals):
+        for xv, yv in zip(xvals, yvals, strict=True):
             if not (np.isfinite(xv) and np.isfinite(yv)):
                 continue
             coord_lines.append(f"      ({xv:.6f},{yv:.6f})")
@@ -802,7 +802,7 @@ class PlotTikzApp:
 
 def main():
     root = tk.Tk()
-    app = PlotTikzApp(root)
+    _app = PlotTikzApp(root)  # référence gardée pendant mainloop()
     root.mainloop()
 
 

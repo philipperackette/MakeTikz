@@ -1,0 +1,5 @@
+# Dépendances pour développer et tester (pip install -r requirements-dev.txt).
+-r hf_space/requirements.txt
+scipy
+pytest
+ruff==0.15.8

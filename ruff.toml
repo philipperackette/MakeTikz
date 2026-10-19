@@ -1,0 +1,7 @@
+# Lint minimal : erreurs (F), style PEP 8 (E, W) et pièges courants (B).
+target-version = "py310"
+
+[lint]
+select = ["E", "W", "F", "B"]
+# Lignes longues tolérées (code TikZ et messages d'interface).
+ignore = ["E501"]

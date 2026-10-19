@@ -208,33 +208,33 @@ class PlotTikzApp:
             ymin = float(self.ymin_var.get())
             ymax = float(self.ymax_var.get())
             ns = self.num_samples_var.get()
-            
+
             # Réinitialisation
             self.ax.clear()
             self.label_texts = []
-            
+
             # Initialisation du dictionnaire de positions seulement s'il n'existe pas
             if not hasattr(self, 'label_positions'):
                 self.label_positions = {}
-            
+
             style_mpl_map = {
                 "solid": "solid",
                 "dashed": "dashed",
                 "dotted": "dotted",
                 "dashdot": "dashdot"
             }
-            
+
             # Préparation des données pour 2 courbes
             fstrs = [f1, f2]
             labs = [l1, l2]
             stys = [sty1, sty2]
             cols = [col1, col2]
             lwlist = [lw1, lw2]
-            
+
             for i in range(2):
                 if not fstrs[i]:
                     continue
-                
+
                 # Même lecture que le code TikZ (^, 2x, abs, ln...) ; courbe coupée aux pôles
                 try:
                     expr = parse_function(fstrs[i])
@@ -243,26 +243,26 @@ class PlotTikzApp:
                     raise ValueError(f"Fonction {i+1} : {exc}") from None
                 xvals, yvals = sample_function(expr, xmin, xmax, max(int(ns), 400),
                                                float(self.max_abs_y_var.get()))
-                
+
                 # Style de la courbe
                 st_ = style_mpl_map.get(stys[i], "solid")
                 c_ = cols[i] if cols[i] else "black"
                 l_ = lwlist[i]
                 self.ax.plot(xvals, yvals, linestyle=st_, color=c_, linewidth=l_)
-                
+
                 # --- Positionnement intelligent du label ---
-                
+
                 # Si l'utilisateur a déjà défini une position manuellement, l'utiliser
                 if i in self.label_positions:
                     xlab, ylab = self.label_positions[i]
                     anchor = "center"
                 else:
                     # Sinon, calculer une position optimale
-                    
+
                     # 1. Filtrer les valeurs exploitables
                     finite_mask = np.isfinite(yvals) & (np.abs(yvals) < 1e10)
                     inside_mask = finite_mask & (yvals >= ymin) & (yvals <= ymax)
-                    
+
                     if np.any(inside_mask):
                         # Cas idéal : valeurs dans la fenêtre visible
                         valid_idx = np.where(inside_mask)[0]
@@ -275,20 +275,20 @@ class PlotTikzApp:
                         ylab = (ymin + ymax) / 2
                         anchor = "center"
                         valid_idx = None
-                    
+
                     if valid_idx is not None and len(valid_idx) > 0:
                         # Positionnement stratégique : 80% pour courbe 1, 20% pour courbe 2
                         frac = 0.8 if i == 0 else 0.2
                         idx_in_valid = int(frac * (len(valid_idx) - 1))
                         idx = valid_idx[idx_in_valid]
-                        
+
                         xlab = xvals[idx]
                         ylab = yvals[idx]
-                        
+
                         # Décalage intelligent
                         dx = 0.02 * (xmax - xmin)
                         dy = 0.05 * (ymax - ymin)
-                        
+
                         # Décalage alterné pour éviter chevauchements
                         if i == 0:
                             ylab += dy
@@ -296,18 +296,18 @@ class PlotTikzApp:
                         else:
                             ylab -= dy
                             anchor = "top"
-                        
+
                         xlab += dx
-                        
+
                         # S'assurer de rester dans la fenêtre avec marge
                         xmarg = 0.02 * (xmax - xmin)
                         ymarg = 0.02 * (ymax - ymin)
                         xlab = min(max(xlab, xmin + xmarg), xmax - xmarg)
                         ylab = min(max(ylab, ymin + ymarg), ymax - ymarg)
-                    
+
                     # Mémoriser la position calculée
                     self.label_positions[i] = (xlab, ylab)
-                
+
                 # Création du label
                 txt_obj = self.ax.text(
                     xlab, ylab, labs[i],
@@ -319,13 +319,13 @@ class PlotTikzApp:
                 )
                 txt_obj._curve_index = i
                 self.label_texts.append(txt_obj)
-            
+
             # Configuration finale du graphique
             self.ax.set_xlim(xmin, xmax)
             self.ax.set_ylim(ymin, ymax)
             self.ax.grid(self.show_grid_var.get())
             self.canvas.draw()
-            
+
         except Exception as e:
             messagebox.showerror("Erreur", str(e))
 
@@ -348,7 +348,7 @@ class PlotTikzApp:
 
     def generate_tikz(self):
         """
-        Génére code TikZ => scinde piecewise/pôles, 
+        Génére code TikZ => scinde piecewise/pôles,
         remplace "log(" par "ln(",
         lit hide_extremes_var pour omettre xmin,xmax etc.
         """
@@ -447,7 +447,7 @@ class PlotTikzApp:
 
 def main():
     root= tk.Tk()
-    app= PlotTikzApp(root)
+    _app = PlotTikzApp(root)  # référence gardée pendant mainloop()
     root.mainloop()
 
 if __name__=="__main__":

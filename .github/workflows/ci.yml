@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install ruff==0.15.8
+      - run: ruff check --output-format=github .
+
+  tests:
+    name: Tests (Python ${{ matrix.python }}, pgfplots)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.10 : version par défaut des Spaces Hugging Face.
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            hf_space/requirements.txt
+      - name: LaTeX et pgfplots
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends texlive-latex-base texlive-pictures
+      - run: pip install -r requirements-dev.txt
+      # Les tests sautent ce qui manque : ici tout doit être présent.
+      - name: Vérifier que rien ne manque
+        run: |
+          python -c "import tkinter, scipy, gradio"
+          kpsewhich pgfplots.sty
+      - run: python -m pytest -v -rs
